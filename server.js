@@ -21,6 +21,7 @@ io.sockets.on('connection', function (socket) {
   socket.emit('from server', { server: 'I am the server' });
   socket.on('from client', function (data) {
     console.log(JSON.stringify(data));
+    socket.emit('from server', { server: data });
   });
 });
 

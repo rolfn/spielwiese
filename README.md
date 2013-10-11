@@ -12,7 +12,7 @@ Mit **[socket.io](http://socket.io/)** ist es möglich, eine permanente Kommunik
 npm install socket.io
 ```
 
-### Code des Servers (`server.js`):
+### Code des Servers (server.js):
 
 ```javascript
 var app = require('http').createServer(handler)
@@ -38,33 +38,52 @@ io.sockets.on('connection', function (socket) {
   socket.emit('from server', { server: 'I am the server' });
   socket.on('from client', function (data) {
     console.log(JSON.stringify(data));
+    socket.emit('from server', { server: data });
   });
 });
 ```
 
-### Code des Clients (`index.html`):
+### Code des Clients (index.html):
 
 ```html
- <html>
+<html>
 <head>
   <script type="text/javascript"
     src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js">
   </script>
   <script type="text/javascript" src="/socket.io/socket.io.js" ></script>
   <script>
-    var socket = io.connect('http://localhost');
-    socket.on('from server', function (data) {
-      console.log(data);
-      $('#data').text(JSON.stringify(data));
-      socket.emit('from client', { client: 'I am the client' });
+    $(document).ready(function() {
+      var socket = io.connect('http://localhost');
+      socket.on('from server', function (data) {
+        console.log(data);
+        $('#data').text($('#data').text() + '\n' + JSON.stringify(data));
+      });
+      $('#send').click(function () {
+        socket.emit('from client', { client: 'I am the client' });
+      });
     });
   </script>
 </head>
 
 <body>
-  <textarea id="data" cols="120"></textarea>
+  <textarea id="data" cols="120" rows="10" ></textarea><br />
+  <input type="button" value="Message to Server" id="send" />
 </body>
 </html>
+
+```
+
+### Start des Servers
+
+```
+node server.js
+```
+
+### Aufru des Clients
+
+```
+firefox http://localhost:9001/
 ```
 
 
