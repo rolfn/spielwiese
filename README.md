@@ -80,7 +80,7 @@ io.sockets.on('connection', function (socket) {
 node server.js
 ```
 
-### Aufru des Clients
+### Aufruf des Clients
 
 ```
 firefox http://localhost:9001/
