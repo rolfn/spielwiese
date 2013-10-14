@@ -23,7 +23,7 @@ var clients = {}
 io.sockets.on('connection', function (socket) {
   clients[socket.id] = socket;
   console.log('client ' + '(' + socket.id + ') connected');
-  socket.emit('from server', { server: 'client ' + '(' + socket.id + ') registered' });
+  socket.emit('from server', { server: 'client ' + '(' + socket.id + ') connected' });
   socket.on('from client', function (data) {
     console.log(inspect(data));
   });
@@ -32,7 +32,7 @@ io.sockets.on('connection', function (socket) {
     delete clients[socket.id];
   });
   socket.on('forceDisconnect', function () {
-    socket.emit('from server', { server: 'client ' + '(' + socket.id + ') disconnected' });
+    socket.emit('from server', { server: 'client ' + '(' + socket.id + ') disconnect' });
     socket.disconnect();
   });
 });
