@@ -1,1 +1,56 @@
-/home/niepra01/myapp/testing_field/index.html
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<script type='text/javascript'
+  src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js'>
+</script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+$(document).ready(function() {
+  var socket, id, connected = false;
+  function onConnect() {
+    id = socket.socket.sessionid;
+  }
+  function onDisconnect() {
+    //$(field).text($(field).text() + '\n client disconnected');
+  }
+  function fromServer(data) {
+    $(field).text($(field).text() + '\n' + JSON.stringify(data));
+  }
+  $('#send').click(function(e){
+    if (socket) {
+      socket.emit('from client',
+        { client: 'I am the client ' + '"' + id + '"' });
+    }
+  });
+  $('#connect').click(function(e){
+    if (!socket) {
+      socket = io.connect('http://localhost:9001');
+      socket.on('connect', onConnect);
+      socket.on('from server', fromServer);
+      socket.on('disconnect', onDisconnect);
+      connected = true;
+    } else {
+      socket.socket.connect();
+    }
+  });
+  $('#disconnect').click(function(e){
+    socket.emit('forceDisconnect');
+    //socket = undefined;
+    connected = false;
+  });
+
+});
+</script>
+
+</head>
+
+<body>
+
+<textarea id="field" cols="120" rows="15" ></textarea><br />
+<input id="connect" type="button" value="connect"/>
+<input id="disconnect" type="button" value="disconnect"/>
+<input id="send" type="button" value="send"/>
+
+</body>
+</html>
