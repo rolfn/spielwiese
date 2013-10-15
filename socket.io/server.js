@@ -17,10 +17,10 @@ function handler (req, res) {
   });
 }
 
-var clients = {}
+var clients = {};
 
 io.sockets.on('connection', function (socket) {
-  clients[socket.id] = socket; // Client registrieren.
+  clients[socket.id] = socket; // register client.
   console.log('client ' + '(' + socket.id + ') connected');
   socket.emit('from server',
     { server: 'client ' + '(' + socket.id + ') connected' });
@@ -29,7 +29,7 @@ io.sockets.on('connection', function (socket) {
   });
   socket.on('disconnect', function () {
     console.log('client ' + '(' + socket.id + ') disconnected');
-    delete clients[socket.id]; // Client-Registrierung löschen.
+    delete clients[socket.id]; // unregister client.
   });
   socket.on('forceDisconnect', function () {
     socket.emit('from server',

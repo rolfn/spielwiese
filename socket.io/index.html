@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<script src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js'>
+<script src='http://code.jquery.com/jquery-latest.min.js'>
 </script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
@@ -17,13 +17,13 @@ $(document).ready(function() {
     $(field).text($(field).text() + '\n' + JSON.stringify(data));
   }
   $('#send').click(function(e){
-    if (id) {
+    if (id) {// "connect" before "send"
       socket.emit('from client',
         { client: 'I am the client ' + '"' + id + '"' });
     }
   });
   $('#connect').click(function(e){
-    if (!id) {// First "disconnect" before "connect"
+    if (!id) {// "disconnect" before "connect"
       if (!socket) {
         var host = document.location.hostname;
         var port = document.location.port;
@@ -37,8 +37,10 @@ $(document).ready(function() {
     }
   });
   $('#disconnect').click(function(e){
-    socket.emit('forceDisconnect');
-    // Tell the server to do "disconnect".
+    if (id) {// "connect" before "disconnect"
+      socket.emit('forceDisconnect');
+      // Tell the server to do "disconnect".
+    }
   });
 
 });
