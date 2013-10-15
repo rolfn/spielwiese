@@ -13,6 +13,9 @@ $(document).ready(function() {
   function onDisconnect() {
     id = undefined;
   }
+  function someError() {
+    // ...
+  }
   function fromServer(data) {
     $(field).text($(field).text() + '\n' + JSON.stringify(data));
   }
@@ -31,6 +34,8 @@ $(document).ready(function() {
         socket.on('connect', onConnect);
         socket.on('disconnect', onDisconnect);
         socket.on('from server', fromServer);
+        socket.on('connect_failed', someError);
+        socket.on('error', someError);
       } else {
         socket.socket.connect();
       }
