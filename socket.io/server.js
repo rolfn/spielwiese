@@ -26,6 +26,8 @@ io.sockets.on('connection', function (socket) {
     { server: 'client ' + '(' + socket.id + ') connected' });
   socket.on('from client', function (data) {
     console.log(inspect(data));
+    socket.emit('from server',
+    { server: 'your message was: ' + inspect(data) });
   });
   socket.on('disconnect', function () {
     console.log('client ' + '(' + socket.id + ') disconnected');
