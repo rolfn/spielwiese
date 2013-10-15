@@ -12,7 +12,6 @@ function handler (req, res) {
       res.writeHead(500);
       return res.end('Error loading index.html');
     }
-
     res.writeHead(200);
     res.end(data);
   });
@@ -21,18 +20,20 @@ function handler (req, res) {
 var clients = {}
 
 io.sockets.on('connection', function (socket) {
-  clients[socket.id] = socket;
+  clients[socket.id] = socket; // Client registrieren.
   console.log('client ' + '(' + socket.id + ') connected');
-  socket.emit('from server', { server: 'client ' + '(' + socket.id + ') connected' });
+  socket.emit('from server',
+    { server: 'client ' + '(' + socket.id + ') connected' });
   socket.on('from client', function (data) {
     console.log(inspect(data));
   });
   socket.on('disconnect', function () {
-    console.log('client ' + '(' + socket.id + ') disconnected');
-    delete clients[socket.id];
+    console.log('client ' + '(' + socket.id + ') disconnect');
+    delete clients[socket.id]; // Client-Registrierung löschen.
   });
   socket.on('forceDisconnect', function () {
-    socket.emit('from server', { server: 'client ' + '(' + socket.id + ') disconnect' });
+    socket.emit('from server',
+      { server: 'client ' + '(' + socket.id + ') disconnect' });
     socket.disconnect();
   });
 });

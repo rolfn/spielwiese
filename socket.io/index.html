@@ -7,12 +7,12 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
 $(document).ready(function() {
-  var socket, id, connected = false;
+  var socket, id;
   function onConnect() {
     id = socket.socket.sessionid;
   }
   function onDisconnect() {
-    //$(field).text($(field).text() + '\n client disconnected');
+    id = undefined;
   }
   function fromServer(data) {
     $(field).text($(field).text() + '\n' + JSON.stringify(data));
@@ -24,20 +24,20 @@ $(document).ready(function() {
     }
   });
   $('#connect').click(function(e){
-    if (!socket) {
-      socket = io.connect('http://localhost:9001');
-      socket.on('connect', onConnect);
-      socket.on('from server', fromServer);
-      socket.on('disconnect', onDisconnect);
-      connected = true;
-    } else {
-      socket.socket.connect();
+    if (!id) {// "connect" erst, wenn vorher "disconnect"
+      if (!socket) {
+        socket = io.connect('http://localhost:9001');
+        socket.on('connect', onConnect);
+        socket.on('from server', fromServer);
+        socket.on('disconnect', onDisconnect);
+      } else {
+        socket.socket.connect();
+      }
     }
   });
   $('#disconnect').click(function(e){
     socket.emit('forceDisconnect');
-    //socket = undefined;
-    connected = false;
+    // Server zum "disconnect" veranlassen.
   });
 
 });
