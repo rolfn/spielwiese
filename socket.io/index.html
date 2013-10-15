@@ -26,7 +26,7 @@ $(document).ready(function() {
   $('#connect').click(function(e){
     if (!id) {// "connect" erst, wenn vorher "disconnect"
       if (!socket) {
-        socket = io.connect('http://localhost:9001');
+        socket = io.connect('ws://localhost:9001');
         socket.on('connect', onConnect);
         socket.on('from server', fromServer);
         socket.on('disconnect', onDisconnect);
