@@ -18,7 +18,7 @@ $(document).ready(function() {
     $(field).text($(field).text() + '\n' + JSON.stringify(data));
   }
   $('#send').click(function(e){
-    if (socket) {
+    if (id) {
       socket.emit('from client',
         { client: 'I am the client ' + '"' + id + '"' });
     }

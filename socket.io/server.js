@@ -28,7 +28,7 @@ io.sockets.on('connection', function (socket) {
     console.log(inspect(data));
   });
   socket.on('disconnect', function () {
-    console.log('client ' + '(' + socket.id + ') disconnect');
+    console.log('client ' + '(' + socket.id + ') disconnected');
     delete clients[socket.id]; // Client-Registrierung löschen.
   });
   socket.on('forceDisconnect', function () {
