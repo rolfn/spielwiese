@@ -19,7 +19,7 @@ $(document).ready(function() {
   $('#send').click(function(e){
     if (id) {// "connect" before "send"
       socket.emit('from client',
-        { client: 'I am the client ' + '"' + id + '"' });
+        { client: 'I am the client ' + '»' + id + '«' });
     }
   });
   $('#connect').click(function(e){

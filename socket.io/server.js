@@ -21,21 +21,21 @@ var clients = {};
 
 io.sockets.on('connection', function (socket) {
   clients[socket.id] = socket; // register client.
-  console.log('client ' + '(' + socket.id + ') connected');
+  console.log('client ' + '»' + socket.id + '« connected');
   socket.emit('from server',
-    { server: 'client ' + '(' + socket.id + ') connected' });
+    { server: 'client ' + '»' + socket.id + '« connected' });
   socket.on('from client', function (data) {
     console.log(inspect(data));
     socket.emit('from server',
     { server: 'your message was: ' + inspect(data) });
   });
   socket.on('disconnect', function () {
-    console.log('client ' + '(' + socket.id + ') disconnected');
+    console.log('client ' + '»' + socket.id + '« disconnected');
     delete clients[socket.id]; // unregister client.
   });
   socket.on('forceDisconnect', function () {
     socket.emit('from server',
-      { server: 'client ' + '(' + socket.id + ') disconnect' });
+      { server: 'client ' + '»' + socket.id + '« disconnect' });
     socket.disconnect();
   });
 });
