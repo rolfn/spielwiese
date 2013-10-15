@@ -13,18 +13,12 @@ $(document).ready(function() {
   function onDisconnect() {
     id = undefined;
   }
-  function someError() {
+  function onError() {
     // ...
   }
   function fromServer(data) {
     $(field).text($(field).text() + '\n' + JSON.stringify(data));
   }
-  $('#send').click(function(e){
-    if (id) {// "connect" before "send"
-      socket.emit('from client',
-        { client: 'I am the client ' + '»' + id + '«' });
-    }
-  });
   $('#connect').click(function(e){
     if (!id) {// "disconnect" before "connect"
       if (!socket) {
@@ -34,8 +28,8 @@ $(document).ready(function() {
         socket.on('connect', onConnect);
         socket.on('disconnect', onDisconnect);
         socket.on('from server', fromServer);
-        socket.on('connect_failed', someError);
-        socket.on('error', someError);
+        socket.on('connect_failed', onError);
+        socket.on('error', onError);
       } else {
         socket.socket.connect();
       }
@@ -47,7 +41,12 @@ $(document).ready(function() {
       // Tell the server to do "disconnect".
     }
   });
-
+  $('#send').click(function(e){
+    if (id) {// "connect" before "send"
+      socket.emit('from client',
+        { client: 'I am the client ' + '»' + id + '«' });
+    }
+  });
 });
 </script>
 
