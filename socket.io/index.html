@@ -1,8 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<script type='text/javascript'
-  src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js'>
+<script src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js'>
 </script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
@@ -24,14 +23,14 @@ $(document).ready(function() {
     }
   });
   $('#connect').click(function(e){
-    if (!id) {// "connect" erst, wenn vorher "disconnect"
+    if (!id) {// First "disconnect" before "connect"
       if (!socket) {
         var host = document.location.hostname;
         var port = document.location.port;
         socket = io.connect('ws://' + host + ':' + port);
         socket.on('connect', onConnect);
-        socket.on('from server', fromServer);
         socket.on('disconnect', onDisconnect);
+        socket.on('from server', fromServer);
       } else {
         socket.socket.connect();
       }
@@ -39,7 +38,7 @@ $(document).ready(function() {
   });
   $('#disconnect').click(function(e){
     socket.emit('forceDisconnect');
-    // Server zum "disconnect" veranlassen.
+    // Tell the server to do "disconnect".
   });
 
 });
