@@ -20,16 +20,13 @@ var logger = require('./vlogger')({
   ]
 });
 
-/*
-var logger = require('./vlogger')();
-
-logger.add(winston.transports.Console, {
-  level: 'debug',
+logger.add(winston.transports.File, {
+  level: 'warn',
   handleExceptions: true,
-  colorize: true,
-  prettyPrint: true
+  filename: './vlogger-test.log',
+  prettyPrint: true,
+  json: false
 });
-*/
 
 function function1() {
   function function1_1() {
