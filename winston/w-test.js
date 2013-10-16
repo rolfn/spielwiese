@@ -24,17 +24,6 @@ var level_cfg = {
   }
 };
 
-var cfg = {
-  level: 'debug',
-  json : false,
-  timestamp : function() {
-    return moment().format('YYYY-MM-DD HH:mm:ss.SSS');
-  },
-  handleExceptions: true,
-  colorize: true,
-  prettyPrint: true
-}
-
 var myConsole = new (winston.transports.Console)({
   level: 'debug',
   json : false,
@@ -65,6 +54,10 @@ logger.log = function() {
   winston.Logger.prototype.log.apply(this, arguments);
 }
 
+///console.log(inspect(logger));
+console.log('XXX: ' + typeof winston.transports.Console);
+console.log('XXX: ' + typeof myConsole);
+
 logger.log('info', 'Hello distributed log files!',
   { anything: 'This is metadata' });
 logger.info('Das ist ein "%s"', 'String');
@@ -90,7 +83,8 @@ fridolin2();
 
 logger.info('GUSTAV');
 
-logger.remove(myConsole);
+//logger.remove(myConsole);
+logger.clear();
 
 logger.info('HUGO 1');
 
