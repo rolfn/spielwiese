@@ -9,7 +9,7 @@ var moment = require('moment');
 /// winston.remove(winston.transports.Console);
 var stackTrace = require('stack-trace');
 
-var config = {
+var level_cfg = {
   levels: {
     debug: 0,
     info: 1,
@@ -24,32 +24,46 @@ var config = {
   }
 };
 
-var myConsole = new (winston.transports.Console)({
+var cfg = {
   level: 'debug',
-  levels: config.levels,
   json : false,
   timestamp : function() {
     return moment().format('YYYY-MM-DD HH:mm:ss.SSS');
   },
-  label: "HUGO", // function?!
   handleExceptions: true,
   colorize: true,
+  prettyPrint: true
+}
+
+var myConsole = new (winston.transports.Console)({
+  level: 'debug',
+  json : false,
+  timestamp : function() {
+    return moment().format('YYYY-MM-DD HH:mm:ss.SSS');
+  },
+  handleExceptions: true,
+  colorize: true,
+  prettyPrint: true
 });
 
 var logger = new (winston.Logger)({
-    level: 'debug',
-    levels: config.levels,
-    colors: config.colors,
-    transports: [
-      myConsole
-    ],
-  });
-
-//winston.addColors(config.colors);
-
-logger.stream({ start: -1 }).on('log', function(log) {
-  console.log('\n\n\n+++++++++++++++' + log);
+  levels: level_cfg.levels,
+  colors: level_cfg.colors,
 });
+
+logger.add(myConsole, {}, true);
+
+logger.log = function() {
+  var parentMethod = stackTrace.get()[1].getMethodName();
+  var trace = parentMethod ? stackTrace.get()[2] : stackTrace.get()[1];
+  var file = Path.basename(trace.getFileName());
+  var line = trace.getLineNumber();
+  var func = trace.getFunctionName() ? ':' + trace.getFunctionName() : '';
+  for (var i in logger.transports) {
+    logger.transports[i].label = file + ':' + line + func;
+  }
+  winston.Logger.prototype.log.apply(this, arguments);
+}
 
 logger.log('info', 'Hello distributed log files!',
   { anything: 'This is metadata' });
@@ -58,56 +72,29 @@ logger.debug('DEGUG');
 logger.warn('WARN');
 logger.error('ERROR');
 
-/*
-logger.log = function() {
-  var args = arguments;
-  if(args[2]) args[3] = args[2];
-  args[2] = {
-    "foo" : "bar"
-  }
-  winston.Logger.prototype.log.apply(this,args);
-}
-* */
-
-myLog = function() {
-  var trace = stackTrace.get()[2];
-  var file = Path.basename(trace.getFileName());
-  var line = trace.getLineNumber();
-  var method = trace.getFunctionName() ? ':' + trace.getFunctionName() : '';
-  for (var i in logger.transports) {
-    logger.transports[i].label = file + ':' + line + method;
-  }
-  winston.Logger.prototype.log.apply(this, arguments);
-}
-
-logger.log = myLog;
-
-/*
-
-dummy-Logger!?
-
-
-*/
-
-function fridolin() {
+function fridolin1() {
   logger.info('FRIDOLIN %s', 'XXX');
+  logger.log('info', 'FRIDOLIN %s', 'YYY');
 }
 
-fridolin();
+function fridolin2() {
+  function fridolin3() {
+    logger.info('FRIDOLIN %s', 'UUU');
+    logger.log('info', 'FRIDOLIN %s', 'VVV');
+  }
+  fridolin3();
+}
+
+fridolin1();
+fridolin2();
 
 logger.info('GUSTAV');
 
-//logger.remove(winston.transports.Console);
-
-// logger.remove(myConsole);
-
-logger.log = function() {}; //?
+logger.remove(myConsole);
 
 logger.info('HUGO 1');
 
-//logger.add(myConsole);
-
-logger.log = myLog;
+logger.add(myConsole, {}, true);
 
 logger.info('HUGO 2');
 
