@@ -32,15 +32,15 @@ function timestamp() {
 logger.add = function (_o, _c) {
   var c = _c ? _c : {};
   var o = typeof _o === 'object' ? _o : new _o(c);
-  // Our own timestamp format for every added transport
+  // our own timestamp format for every added transport
   o.timestamp = timestamp;
-  // save the transport objects
+  // save the transports
   _transports[o.name] = o;
   winston.Logger.prototype.add.call(this, o, {}, true);
 }
 
 logger.remove = function(o) {
-  // remove the transport objects here and on logger level
+  // remove the transports here and on logger level
   delete _transports[o.name];
   winston.Logger.prototype.remove.call(this, o);
 }
@@ -51,23 +51,23 @@ logger.log = function() {
   var file = path.basename(trace.getFileName());
   var line = trace.getLineNumber();
   var func = trace.getFunctionName() ? ':' + trace.getFunctionName() : '';
-  // Label: FileName:Linenumber:FunctionName
-  for (var i in logger.transports) {
-    logger.transports[i].label = file + ':' + line + func;
+  // Label -> file name:line number:function name
+  for (var name in this.transports) {
+    this.transports[name].label = file + ':' + line + func;
   }
   winston.Logger.prototype.log.apply(this, arguments);
 }
 
 logger.enable = function() {
   for (var name in _transports) {
-    // re-add the remembered transport objects;
+    // re-add the remembered transports;
     winston.Logger.prototype.add.call(this, _transports[name], {}, true);
   }
 }
 
 logger.disable = function () {
   for (var name in this.transports) {
-    // remove the transport objects on logger level
+    // remove the transports on logger level
     winston.Logger.prototype.remove.call(this, { name: name });
   }
 };

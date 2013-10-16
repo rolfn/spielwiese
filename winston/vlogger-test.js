@@ -16,17 +16,17 @@ logger.add(winston.transports.Console, {
   prettyPrint: true
 });
 
-function fridolin1() {
+function function1() {
   logger.info('FRIDOLIN %s', 'XXX');
   logger.log('info', 'FRIDOLIN %s', 'YYY');
 }
 
-function fridolin2() {
-  function fridolin3() {
+function function2() {
+  function function2_1() {
     logger.info('FRIDOLIN %s', 'UUU');
     logger.log('info', 'FRIDOLIN %s', 'VVV');
   }
-  fridolin3();
+  function2_1();
 }
 
 console.log('###########################################');
@@ -36,13 +36,14 @@ logger.debug('DEGUG');
 logger.warn('WARN');
 logger.error('ERROR');
 
-fridolin1();
-fridolin2();
+function1();
+function2();
 
-logger.info('GUSTAV');
+logger.warn('disable logger');
 logger.disable();
 logger.info('HUGO 1');
 logger.enable();
+logger.warn('enable  logger');
 logger.info('HUGO 2');
 
 console.log('###########################################');
