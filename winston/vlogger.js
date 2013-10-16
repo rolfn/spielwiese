@@ -22,54 +22,78 @@ var level_cfg = {
   }
 };
 
-var logger = new (winston.Logger)();
-var _transports = {};
-
 function timestamp() {
   return moment().format('YYYY-MM-DD HH:mm:ss.SSS');
 }
 
-logger.add = function (_o, _c) {
-  var c = _c ? _c : {};
-  var o = typeof _o === 'object' ? _o : new _o(c);
-  // our own timestamp format for every added transport
-  o.timestamp = timestamp;
-  // save the transports
-  _transports[o.name] = o;
-  winston.Logger.prototype.add.call(this, o, {}, true);
-}
+var logger, _transports = {};
 
-logger.remove = function(o) {
-  // remove the transports here and on logger level
-  delete _transports[o.name];
-  winston.Logger.prototype.remove.call(this, o);
-}
+var getLogger = function(_cfg) {
 
-logger.log = function() {
-  var parent = stackTrace.get()[1].getMethodName();
-  var trace = parent ? stackTrace.get()[2] : stackTrace.get()[1];
-  var file = path.basename(trace.getFileName());
-  var line = trace.getLineNumber();
-  var func = trace.getFunctionName() ? ':' + trace.getFunctionName() : '';
-  // Label -> file name:line number:function name
-  for (var name in this.transports) {
-    this.transports[name].label = file + ':' + line + func;
+  if (logger) return logger;
+
+  var cfg = _cfg || {};
+
+  var tr;
+
+  if (cfg.transports && cfg.transports.length) {
+    tr = cfg.transports.slice(0);
+    delete cfg.transports;
   }
-  winston.Logger.prototype.log.apply(this, arguments);
+
+  logger = new (winston.Logger)(cfg);
+
+  logger.add = function (_o, _c) {
+    var c = _c ? _c : {};
+    var o = typeof _o === 'object' ? _o : new _o(c);
+    // our own timestamp format for every added transport
+    o.timestamp = timestamp;
+    // save the transports
+    _transports[o.name] = o;
+    winston.Logger.prototype.add.call(this, o, {}, true);
+  }
+
+  logger.remove = function(o) {
+    // remove the transports here and on logger level
+    delete _transports[o.name];
+    winston.Logger.prototype.remove.call(this, o);
+  }
+
+  logger.log = function() {
+    var parent = stackTrace.get()[1].getMethodName();
+    var trace = parent ? stackTrace.get()[2] : stackTrace.get()[1];
+    var file = path.basename(trace.getFileName());
+    var line = trace.getLineNumber();
+    var func = trace.getFunctionName() ? ':' + trace.getFunctionName() : '';
+    // Label -> file name:line number:function name
+    for (var name in this.transports) {
+      this.transports[name].label = file + ':' + line + func;
+    }
+    winston.Logger.prototype.log.apply(this, arguments);
+  }
+
+  logger.enable = function() {
+    for (var name in _transports) {
+      // re-add the remembered transports;
+      winston.Logger.prototype.add.call(this, _transports[name], {}, true);
+    }
+  }
+
+  logger.disable = function () {
+    for (var name in this.transports) {
+      // remove the transports on logger level
+      winston.Logger.prototype.remove.call(this, { name: name });
+    }
+  };
+
+  if (tr) {
+    for (var i=0; i<tr.length; i++) {
+      logger.add(tr[i]);
+    }
+  }
+
+  return logger;
+
 }
 
-logger.enable = function() {
-  for (var name in _transports) {
-    // re-add the remembered transports;
-    winston.Logger.prototype.add.call(this, _transports[name], {}, true);
-  }
-}
-
-logger.disable = function () {
-  for (var name in this.transports) {
-    // remove the transports on logger level
-    winston.Logger.prototype.remove.call(this, { name: name });
-  }
-};
-
-module.exports = logger;
+module.exports = getLogger;

@@ -5,9 +5,23 @@
  */
 
 var winston = require('winston');
-var logger = require('./vlogger');
 
-// TODO: transport" "vWebsocket"
+// TODO: transport "vWebsocket"
+
+
+var logger = require('./vlogger')({
+  transports: [
+    new winston.transports.Console({
+      level: 'debug',
+      handleExceptions: true,
+      colorize: true,
+      prettyPrint: true
+    })
+  ]
+});
+
+/*
+var logger = require('./vlogger')();
 
 logger.add(winston.transports.Console, {
   level: 'debug',
@@ -15,18 +29,14 @@ logger.add(winston.transports.Console, {
   colorize: true,
   prettyPrint: true
 });
+*/
 
 function function1() {
-  logger.info('FRIDOLIN %s', 'XXX');
-  logger.log('info', 'FRIDOLIN %s', 'YYY');
-}
-
-function function2() {
-  function function2_1() {
+  function function1_1() {
     logger.info('FRIDOLIN %s', 'UUU');
     logger.log('info', 'FRIDOLIN %s', 'VVV');
   }
-  function2_1();
+  function1_1();
 }
 
 console.log('###########################################');
@@ -37,7 +47,6 @@ logger.warn('WARN');
 logger.error('ERROR');
 
 function1();
-function2();
 
 logger.warn('disable logger');
 logger.disable();
