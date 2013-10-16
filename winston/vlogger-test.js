@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 
+/**
+ * @author Rolf Niepraschk (Rolf.Niepraschk@gmx.de)
+ */
+
 var winston = require('winston');
 var logger = require('./vlogger');
 
