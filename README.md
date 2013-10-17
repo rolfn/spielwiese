@@ -26,7 +26,13 @@ firefox http://localhost:9001/
 
 ## "winston"
 
-...
+Modul `vlogger`. Exportiert eine Funktion, die eine singleton-Logger-Instanz liefert. Das optionale Konfigurationsobjekt entspricht dem von **[winston](https://github.com/flatiron/winston/blob/master/README.md)**. Zusätzlich zu den beim Original vorhandenen Funktionen kann mit `disable` die log-Ausgabe für sämtliche registrierten Transportwege unterdrückt bzw. mit `enable` wieder aktiviert werden. Das Format der log-Ausgabe ist feststehend:
+
+```
+2013-10-17 08:53:10.862 - info: [FILENAME:LINENUMBER:FUNCTIONNAME] TEXT
+```
+
+
 
 
 
