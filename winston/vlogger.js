@@ -26,7 +26,7 @@ function timestamp() {
   return moment().format('YYYY-MM-DD HH:mm:ss.SSS');
 }
 
-var logger, disabled = false;
+var logger, enabled = true;
 
 var getLogger = function(_cfg) {
 
@@ -52,7 +52,7 @@ var getLogger = function(_cfg) {
   }
 
   logger.log = function() {
-    if (disabled) return;
+    if (!enabled) return;
     var parent = stackTrace.get()[1].getMethodName();
     var trace = parent ? stackTrace.get()[2] : stackTrace.get()[1];
     var file = path.basename(trace.getFileName());
@@ -65,12 +65,8 @@ var getLogger = function(_cfg) {
     winston.Logger.prototype.log.apply(this, arguments);
   }
 
-  logger.enable = function() {
-    disabled = false;
-  }
-
-  logger.disable = function () {
-    disabled = true;
+  logger.enable = function(x) {
+    enabled = x;
   }
 
   if (tr) {
