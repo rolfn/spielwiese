@@ -30,8 +30,8 @@ logger.add(winston.transports.File, {
 
 function function1() {
   function function1_1() {
-    logger.info('FRIDOLIN %s', 'UUU');
-    logger.log('info', 'FRIDOLIN %s', 'VVV');
+    logger.info('XXX %s', 'UUU');
+    logger.log('info', 'XXX %s', 'VVV');
   }
   function1_1();
 }
