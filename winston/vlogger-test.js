@@ -46,9 +46,9 @@ logger.error('ERROR');
 function1();
 
 logger.warn('disable logger');
-logger.disable();
+logger.enable(false);
 logger.info('HUGO 1');
-logger.enable();
+logger.enable(true);
 logger.warn('enable  logger');
 logger.info('HUGO 2');
 

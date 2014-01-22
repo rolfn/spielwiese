@@ -49,7 +49,7 @@ var getLogger = function(_cfg) {
     // our own timestamp format for every added transport
     o.timestamp = timestamp;
     winston.Logger.prototype.add.call(this, o, {}, true);
-  };
+  }
 
   logger.log = function() {
     if (disabled) return;
@@ -63,15 +63,15 @@ var getLogger = function(_cfg) {
       this.transports[name].label = file + ':' + line + func;
     }
     winston.Logger.prototype.log.apply(this, arguments);
-  };
+  }
 
   logger.enable = function() {
     disabled = false;
-  };
-  // Evtl. "silent" nutzen?
+  }
+
   logger.disable = function () {
     disabled = true;
-  };
+  }
 
   if (tr) {
     for (var i=0; i<tr.length; i++) {
